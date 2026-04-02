@@ -114,14 +114,14 @@ Endpoint: `POST http://127.0.0.1:8000/order-items`
 
 | Done | Test | Endpoint | Request Body | Status Code | Expected Behavior |
 |---|---|---|---|---|---|
-| <ul><li>- [ ] </li></ul> | Create product | `POST /products` | <pre><code class="language-json">{<br>  "name": "Wireless Mouse",<br>  "description": "2.4GHz USB mouse",<br>  "price": 25,<br>  "stock_quantity": 20,<br>  "category_id": 1<br>}</code></pre> | `201` | Product is persisted |
-| <ul><li>- [ ] </li></ul> | Create product with invalid name | `POST /products` | <pre><code class="language-json">{<br>  "name": "a",<br>  "description": "2.4GHz USB mouse",<br>  "price": 25,<br>  "stock_quantity": 20,<br>  "category_id": 1<br>}</code></pre> | `400` or `422` | Model validation blocks invalid name |
-| <ul><li>- [ ] </li></ul> | Create product with invalid category | `POST /products` | <pre><code class="language-json">{<br>  "name": "Wireless Mouse",<br>  "description": "2.4GHz USB mouse",<br>  "price": 25,<br>  "stock_quantity": 20,<br>  "category_id": 999999<br>}</code></pre> | `409` | FK integrity is enforced |
-| <ul><li>- [ ] </li></ul> | List products with pagination | `GET /products?skip=0&limit=2` | `N/A` | `200` | Returns paginated products |
-| <ul><li>- [ ] </li></ul> | Get product by valid ID | `GET /products/{product_id}` | `N/A` | `200` | Returns exact product |
-| <ul><li>- [ ] </li></ul> | Update product | `PUT /products/{product_id}` | <pre><code class="language-json">{<br>  "name": "Wireless Mouse Pro",<br>  "description": "2.4GHz USB mouse",<br>  "price": 30,<br>  "stock_quantity": 18,<br>  "category_id": 1<br>}</code></pre> | `200` | Price and stock are updated |
-| <ul><li>- [ ] </li></ul> | Delete product referenced by order items | `DELETE /products/{product_id}` | `N/A` | `409` | Referenced product cannot be deleted |
-| <ul><li>- [ ] </li></ul> | Delete product successfully | `DELETE /products/{product_id}` | `N/A` | `204` | Precondition: no related order items; subsequent `GET` returns `404` |
+| <ul><li>- [x] </li></ul> | Create product | `POST /products` | <pre><code class="language-json">{<br>  "name": "Wireless Mouse",<br>  "description": "2.4GHz USB mouse",<br>  "price": 25,<br>  "stock_quantity": 20,<br>  "category_id": 1<br>}</code></pre> | `201` | Product is persisted |
+| <ul><li>- [x] </li></ul> | Create product with invalid name | `POST /products` | <pre><code class="language-json">{<br>  "name": "a",<br>  "description": "2.4GHz USB mouse",<br>  "price": 25,<br>  "stock_quantity": 20,<br>  "category_id": 1<br>}</code></pre> | `400` or `422` | Model validation blocks invalid name |
+| <ul><li>- [x] </li></ul> | Create product with invalid category | `POST /products` | <pre><code class="language-json">{<br>  "name": "Wireless Mouse",<br>  "description": "2.4GHz USB mouse",<br>  "price": 25,<br>  "stock_quantity": 20,<br>  "category_id": 999999<br>}</code></pre> | `409` | FK integrity is enforced |
+| <ul><li>- [x] </li></ul> | List products with pagination | `GET /products?skip=0&limit=2` | `N/A` | `200` | Returns paginated products |
+| <ul><li>- [x] </li></ul> | Get product by valid ID | `GET /products/{product_id}` | `N/A` | `200` | Returns exact product |
+| <ul><li>- [x] </li></ul> | Update product | `PUT /products/{product_id}` | <pre><code class="language-json">{<br>  "name": "Wireless Mouse Pro",<br>  "description": "2.4GHz USB mouse",<br>  "price": 30,<br>  "stock_quantity": 18,<br>  "category_id": 1<br>}</code></pre> | `200` | Price and stock are updated |
+| <ul><li>- [x] </li></ul> | Delete product referenced by order items | `DELETE /products/{product_id}` | `N/A` | `409` | Referenced product cannot be deleted |
+| <ul><li>- [x] </li></ul> | Delete product successfully | `DELETE /products/{product_id}` | `N/A` | `204` | Precondition: no related order items; subsequent `GET` returns `404` |
 
 ## Customer Tests
 
