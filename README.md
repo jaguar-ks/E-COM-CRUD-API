@@ -19,7 +19,7 @@ A FastAPI + SQLModel ecommerce CRUD API with modular routes, Swagger docs, pagin
 ### 1. Clone and open the project
 
 ```bash
-git clone <your-repo-url>
+git clone git@github.com:jaguar-ks/E-COM-CRUD-API.git
 cd E-COM-CRUD-API
 ```
 
