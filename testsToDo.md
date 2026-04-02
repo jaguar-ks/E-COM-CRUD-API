@@ -100,15 +100,15 @@ Endpoint: `POST http://127.0.0.1:8000/order-items`
 
 | Done | Test | Endpoint | Request Body | Status Code | Expected Behavior |
 |---|---|---|---|---|---|
-| [x] | Create category | `POST /categories` | <pre><code class="language-json">{<br>  "name": "Electronics",<br>  "description": "Devices and accessories"<br>}</code></pre> | `201` | Category is persisted and can be fetched later |
-| [ ] | Create duplicate category | `POST /categories` | <pre><code class="language-json">{<br>  "name": "Electronics",<br>  "description": "Devices and accessories"<br>}</code></pre> | `409` | Duplicate unique name is rejected |
-| [ ] | List categories with pagination | `GET /categories?skip=0&limit=1` | `N/A` | `200` | Pagination parameters are respected |
-| [ ] | List categories with invalid pagination | `GET /categories?skip=-1&limit=10` | `N/A` | `400` | Invalid pagination is rejected |
-| [ ] | Get category by valid ID | `GET /categories/{category_id}` | `N/A` | `200` | Correct category is returned |
-| [ ] | Get category by invalid ID | `GET /categories/999999` | `N/A` | `404` | Not found response for missing ID |
-| [ ] | Update category | `PUT /categories/{category_id}` | <pre><code class="language-json">{<br>  "name": "Electronics-Updated",<br>  "description": "Updated description"<br>}</code></pre> | `200` | Category values are modified |
+| [[x]] | Create category | `POST /categories` | <pre><code class="language-json">{<br>  "name": "Electronics",<br>  "description": "Devices and accessories"<br>}</code></pre> | `201` | Category is persisted and can be fetched later |
+| [x] | Create duplicate category | `POST /categories` | <pre><code class="language-json">{<br>  "name": "Electronics",<br>  "description": "Devices and accessories"<br>}</code></pre> | `409` | Duplicate unique name is rejected |
+| [x] | List categories with pagination | `GET /categories?skip=0&limit=1` | `N/A` | `200` | Pagination parameters are respected |
+| [x] | List categories with invalid pagination | `GET /categories?skip=-1&limit=10` | `N/A` | `400` | Invalid pagination is rejected |
+| [x] | Get category by valid ID | `GET /categories/{category_id}` | `N/A` | `200` | Correct category is returned |
+| [x] | Get category by invalid ID | `GET /categories/999999` | `N/A` | `404` | Not found response for missing ID |
+| [x] | Update category | `PUT /categories/{category_id}` | <pre><code class="language-json">{<br>  "name": "Electronics-Updated",<br>  "description": "Updated description"<br>}</code></pre> | `200` | Category values are modified |
 | [x] | Delete category with referenced products | `DELETE /categories/{category_id}` | `N/A` | `409` | Protected from deletion when linked products exist |
-| [ ] | Delete category successfully | `DELETE /categories/{category_id}` | `N/A` | `204` | Precondition: no linked products; subsequent `GET` returns `404` |
+| [x] | Delete category successfully | `DELETE /categories/{category_id}` | `N/A` | `204` | Precondition: no linked products; subsequent `GET` returns `404` |
 
 ## Product Tests
 
