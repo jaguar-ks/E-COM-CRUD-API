@@ -127,12 +127,12 @@ Endpoint: `POST http://127.0.0.1:8000/order-items`
 
 | Done | Test | Endpoint | Request Body | Status Code | Expected Behavior |
 |---|---|---|---|---|---|
-| <ul><li>- [ ] </li></ul> | Create customer | `POST /customers` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212600000000"<br>}</code></pre> | `201` | Customer is persisted |
-| <ul><li>- [ ] </li></ul> | Create customer with duplicate email | `POST /customers` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212600000000"<br>}</code></pre> | `409` | Unique email constraint enforced |
-| <ul><li>- [ ] </li></ul> | Get customer by valid ID | `GET /customers/{customer_id}` | `N/A` | `200` | Customer record is returned |
-| <ul><li>- [ ] </li></ul> | Update customer phone | `PUT /customers/{customer_id}` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212611111111"<br>}</code></pre> | `200` | Phone number is updated |
+| <ul><li>- [x] </li></ul> | Create customer | `POST /customers` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212600000000"<br>}</code></pre> | `201` | Customer is persisted |
+| <ul><li>- [x] </li></ul> | Create customer with duplicate email | `POST /customers` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212600000000"<br>}</code></pre> | `409` | Unique email constraint enforced |
+| <ul><li>- [x] </li></ul> | Get customer by valid ID | `GET /customers/{customer_id}` | `N/A` | `200` | Customer record is returned |
+| <ul><li>- [x] </li></ul> | Update customer phone | `PUT /customers/{customer_id}` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212611111111"<br>}</code></pre> | `200` | Phone number is updated |
 | <ul><li>- [ ] </li></ul> | Delete customer with orders | `DELETE /customers/{customer_id}` | `N/A` | `409` | Customer cannot be deleted when linked orders exist |
-| <ul><li>- [ ] </li></ul> | Delete customer successfully | `DELETE /customers/{customer_id}` | `N/A` | `204` | Precondition: no related orders; subsequent `GET` returns `404` |
+| <ul><li>- [x] </li></ul> | Delete customer successfully | `DELETE /customers/{customer_id}` | `N/A` | `204` | Precondition: no related orders; subsequent `GET` returns `404` |
 
 ## Order Tests
 
