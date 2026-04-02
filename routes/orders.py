@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from db import get_session
-from models import Order, OrderCreate, OrderItem
+from models import Customer, Order, OrderCreate, OrderItem
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -23,10 +23,19 @@ def recalculate_order_total(order_id: int, session: Session) -> None:
 async def create_order(order: OrderCreate, session: Session = Depends(get_session)):
     """Create a new order record."""
     try:
+        customer = session.get(Customer, order.customer_id)
+        if not customer:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Invalid customer ID or order constraint violation",
+            )
+
         db_order = Order.model_validate(order)
         session.add(db_order)
         session.commit()
         session.refresh(db_order)
+    except HTTPException:
+        raise
     except ValidationError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except IntegrityError:
@@ -87,6 +96,10 @@ async def update_order(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
 
     try:
+        customer = session.get(Customer, order_data.customer_id)
+        if not customer:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Order update conflict")
+
         db_order.customer_id = order_data.customer_id
         db_order.order_date = order_data.order_date
         db_order.status = order_data.status
@@ -96,6 +109,9 @@ async def update_order(
         session.commit()
         session.refresh(db_order)
         return db_order
+    except HTTPException:
+        session.rollback()
+        raise
     except ValidationError as e:
         session.rollback()
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -115,8 +131,19 @@ async def delete_order(order_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
 
     try:
+        related_items = session.exec(
+            select(OrderItem).where(OrderItem.order_id == order_id).limit(1)
+        ).first()
+        if related_items:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Order cannot be deleted due to related records",
+            )
+
         session.delete(db_order)
         session.commit()
+    except HTTPException:
+        raise
     except IntegrityError:
         session.rollback()
         raise HTTPException(
