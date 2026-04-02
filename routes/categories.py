@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from db import get_session
-from models import Category, CategoryCreate
+from models import Category, CategoryCreate, Product
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
@@ -101,8 +101,19 @@ async def delete_category(category_id: int, session: Session = Depends(get_sessi
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")
 
     try:
+        related_products = session.exec(
+            select(Product).where(Product.category_id == category_id).limit(1)
+        ).first()
+        if related_products:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Category cannot be deleted due to related records",
+            )
+
         session.delete(db_category)
         session.commit()
+    except HTTPException:
+        raise
     except IntegrityError:
         session.rollback()
         raise HTTPException(
