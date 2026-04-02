@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from db import get_session
-from models import Customer, CustomerCreate
+from models import Customer, CustomerCreate, Order
 
 router = APIRouter(prefix="/customers", tags=["customers"])
 
@@ -101,8 +101,19 @@ async def delete_customer(customer_id: int, session: Session = Depends(get_sessi
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
 
     try:
+        related_orders = session.exec(
+            select(Order).where(Order.customer_id == customer_id).limit(1)
+        ).first()
+        if related_orders:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Customer cannot be deleted due to related records",
+            )
+
         session.delete(db_customer)
         session.commit()
+    except HTTPException:
+        raise
     except IntegrityError:
         session.rollback()
         raise HTTPException(
