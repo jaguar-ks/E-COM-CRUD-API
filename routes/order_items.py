@@ -110,6 +110,10 @@ async def update_order_item(
     try:
         old_order_id = db_order_item.order_id
 
+        new_order = session.get(Order, order_item_data.order_id)
+        if not new_order:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+
         old_product = session.get(Product, db_order_item.product_id)
         if not old_product:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Existing product not found")
