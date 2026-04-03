@@ -11,7 +11,7 @@ class OrderItemBase(SQLModel):
     """Shared order-item attributes used by create and table models."""
 
     order_id: int = Field(foreign_key="orders.id", description="Parent order identifier.")
-    product_id: int = Field(foreign_key="product.id", description="Referenced product identifier.")
+    product_id: int = Field(foreign_key="product.id", unique=True, description="Referenced product identifier.")
     quantity: int = Field(ge=1, description="Quantity of product ordered.")
     price: int = Field(description="Unit price captured at order time.")
 
