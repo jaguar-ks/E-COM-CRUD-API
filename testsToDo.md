@@ -142,19 +142,19 @@ Endpoint: `POST http://127.0.0.1:8000/order-items`
 | <ul><li>- [x] </li></ul> | Create order with invalid customer | `POST /orders` | <pre><code class="language-json">{<br>  "customer_id": 999999,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 0,<br>  "status": "Pending"<br>}</code></pre> | `409` | FK integrity is enforced |
 | <ul><li>- [x] </li></ul> | Get order by valid ID | `GET /orders/{order_id}` | `N/A` | `200` | Order is returned |
 | <ul><li>- [x] </li></ul> | Update order status | `PUT /orders/{order_id}` | <pre><code class="language-json">{<br>  "customer_id": 1,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 9999,<br>  "status": "Completed"<br>}</code></pre> | `200` | Status updates; total remains computed from order items |
-| <ul><li>- [ ] </li></ul> | Delete order with order items | `DELETE /orders/{order_id}` | `N/A` | `409` | Delete is blocked when linked items exist |
+| <ul><li>- [x] </li></ul> | Delete order with order items | `DELETE /orders/{order_id}` | `N/A` | `409` | Delete is blocked when linked items exist |
 | <ul><li>- [x] </li></ul> | Delete order successfully | `DELETE /orders/{order_id}` | `N/A` | `204` | Precondition: all related order items deleted; subsequent `GET` returns `404` |
 
 ## Order Item Tests (Business Rules)
 
 | Done | Test | Endpoint | Request Body | Status Code | Expected Behavior |
 |---|---|---|---|---|---|
-| <ul><li>- [ ] </li></ul> | Create order item with enough stock | `POST /order-items` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 2,<br>  "price": 25<br>}</code></pre> | `201` | Product stock decreases and order total increases automatically |
-| <ul><li>- [ ] </li></ul> | Create order item with insufficient stock | `POST /order-items` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 999,<br>  "price": 25<br>}</code></pre> | `409` | No stock change and no order item created |
-| <ul><li>- [ ] </li></ul> | Get order item by valid ID | `GET /order-items/{order_item_id}` | `N/A` | `200` | Order item is returned |
-| <ul><li>- [ ] </li></ul> | Update order item quantity within stock | `PUT /order-items/{order_item_id}` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 3,<br>  "price": 25<br>}</code></pre> | `200` | Stock reconciled and order total recalculated |
-| <ul><li>- [ ] </li></ul> | Update order item with insufficient stock | `PUT /order-items/{order_item_id}` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 999,<br>  "price": 25<br>}</code></pre> | `409` | Update rejected and stock remains consistent |
-| <ul><li>- [ ] </li></ul> | Delete order item | `DELETE /order-items/{order_item_id}` | `N/A` | `204` | Stock restored and order total recalculated downward |
+| <ul><li>- [x] </li></ul> | Create order item with enough stock | `POST /order-items` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 2,<br>  "price": 25<br>}</code></pre> | `201` | Product stock decreases and order total increases automatically |
+| <ul><li>- [x] </li></ul> | Create order item with insufficient stock | `POST /order-items` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 999,<br>  "price": 25<br>}</code></pre> | `409` | No stock change and no order item created |
+| <ul><li>- [x] </li></ul> | Get order item by valid ID | `GET /order-items/{order_item_id}` | `N/A` | `200` | Order item is returned |
+| <ul><li>- [x] </li></ul> | Update order item quantity within stock | `PUT /order-items/{order_item_id}` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 3,<br>  "price": 25<br>}</code></pre> | `200` | Stock reconciled and order total recalculated |
+| <ul><li>- [x] </li></ul> | Update order item with insufficient stock | `PUT /order-items/{order_item_id}` | <pre><code class="language-json">{<br>  "order_id": 1,<br>  "product_id": 1,<br>  "quantity": 999,<br>  "price": 25<br>}</code></pre> | `409` | Update rejected and stock remains consistent |
+| <ul><li>- [x] </li></ul> | Delete order item | `DELETE /order-items/{order_item_id}` | `N/A` | `204` | Stock restored and order total recalculated downward |
 
 ## Status Code Coverage By Endpoint
 
