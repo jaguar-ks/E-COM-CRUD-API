@@ -131,19 +131,19 @@ Endpoint: `POST http://127.0.0.1:8000/order-items`
 | <ul><li>- [x] </li></ul> | Create customer with duplicate email | `POST /customers` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212600000000"<br>}</code></pre> | `409` | Unique email constraint enforced |
 | <ul><li>- [x] </li></ul> | Get customer by valid ID | `GET /customers/{customer_id}` | `N/A` | `200` | Customer record is returned |
 | <ul><li>- [x] </li></ul> | Update customer phone | `PUT /customers/{customer_id}` | <pre><code class="language-json">{<br>  "first_name": "Fahd",<br>  "last_name": "K",<br>  "email": "fahd@example.com",<br>  "phone": "+212611111111"<br>}</code></pre> | `200` | Phone number is updated |
-| <ul><li>- [ ] </li></ul> | Delete customer with orders | `DELETE /customers/{customer_id}` | `N/A` | `409` | Customer cannot be deleted when linked orders exist |
+| <ul><li>- [x] </li></ul> | Delete customer with orders | `DELETE /customers/{customer_id}` | `N/A` | `409` | Customer cannot be deleted when linked orders exist |
 | <ul><li>- [x] </li></ul> | Delete customer successfully | `DELETE /customers/{customer_id}` | `N/A` | `204` | Precondition: no related orders; subsequent `GET` returns `404` |
 
 ## Order Tests
 
 | Done | Test | Endpoint | Request Body | Status Code | Expected Behavior |
 |---|---|---|---|---|---|
-| <ul><li>- [ ] </li></ul> | Create order | `POST /orders` | <pre><code class="language-json">{<br>  "customer_id": 1,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 0,<br>  "status": "Pending"<br>}</code></pre> | `201` | Order is created for the customer |
-| <ul><li>- [ ] </li></ul> | Create order with invalid customer | `POST /orders` | <pre><code class="language-json">{<br>  "customer_id": 999999,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 0,<br>  "status": "Pending"<br>}</code></pre> | `409` | FK integrity is enforced |
-| <ul><li>- [ ] </li></ul> | Get order by valid ID | `GET /orders/{order_id}` | `N/A` | `200` | Order is returned |
-| <ul><li>- [ ] </li></ul> | Update order status | `PUT /orders/{order_id}` | <pre><code class="language-json">{<br>  "customer_id": 1,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 9999,<br>  "status": "Completed"<br>}</code></pre> | `200` | Status updates; total remains computed from order items |
+| <ul><li>- [x] </li></ul> | Create order | `POST /orders` | <pre><code class="language-json">{<br>  "customer_id": 1,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 0,<br>  "status": "Pending"<br>}</code></pre> | `201` | Order is created for the customer |
+| <ul><li>- [x] </li></ul> | Create order with invalid customer | `POST /orders` | <pre><code class="language-json">{<br>  "customer_id": 999999,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 0,<br>  "status": "Pending"<br>}</code></pre> | `409` | FK integrity is enforced |
+| <ul><li>- [x] </li></ul> | Get order by valid ID | `GET /orders/{order_id}` | `N/A` | `200` | Order is returned |
+| <ul><li>- [x] </li></ul> | Update order status | `PUT /orders/{order_id}` | <pre><code class="language-json">{<br>  "customer_id": 1,<br>  "order_date": "2026-04-02T10:00:00Z",<br>  "total_amount": 9999,<br>  "status": "Completed"<br>}</code></pre> | `200` | Status updates; total remains computed from order items |
 | <ul><li>- [ ] </li></ul> | Delete order with order items | `DELETE /orders/{order_id}` | `N/A` | `409` | Delete is blocked when linked items exist |
-| <ul><li>- [ ] </li></ul> | Delete order successfully | `DELETE /orders/{order_id}` | `N/A` | `204` | Precondition: all related order items deleted; subsequent `GET` returns `404` |
+| <ul><li>- [x] </li></ul> | Delete order successfully | `DELETE /orders/{order_id}` | `N/A` | `204` | Precondition: all related order items deleted; subsequent `GET` returns `404` |
 
 ## Order Item Tests (Business Rules)
 
