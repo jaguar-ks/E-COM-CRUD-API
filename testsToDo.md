@@ -12,7 +12,6 @@ Manual test plan for all API models.
 - [Customer Tests](#customer-tests)
 - [Order Tests](#order-tests)
 - [Order Item Tests (Business Rules)](#order-item-tests-business-rules)
-- [Status Code Coverage By Endpoint](#status-code-coverage-by-endpoint)
 
 ## Setup
 
