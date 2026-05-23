@@ -3,7 +3,7 @@ from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
-from db import get_session
+from utils.db import get_session
 from models import Customer, CustomerCreate, Order
 
 router = APIRouter(prefix="/customers", tags=["customers"])

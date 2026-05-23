@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from sqlmodel import SQLModel, Session, select
 
 import models
-from db import engine
+from utils.db import engine
 from models import Category, Customer, Order, OrderItem, Product
 from utils.seed_database import seed_database
 from routes import (

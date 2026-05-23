@@ -16,7 +16,7 @@ from pathlib import Path
 
 from sqlmodel import SQLModel, Session, delete
 
-from db import engine
+from utils.db import engine
 from models import Category, Customer, Order, OrderItem, OrderStatus, Product
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "test"
