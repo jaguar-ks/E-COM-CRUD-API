@@ -128,7 +128,6 @@ make clean
 
 - [E-COM-CRUD-API](.)
     - [main.py](main.py)
-    - [db.py](db.py)
     - [models/](models) — SQLModel models and Pydantic schemas
         - [models/__init__.py](models/__init__.py)
         - [models/product.py](models/product.py)
@@ -144,17 +143,24 @@ make clean
         - [routes/orders.py](routes/orders.py)
         - [routes/order_items.py](routes/order_items.py)
     - [utils/](utils) — helper scripts (seeder, misc)
+        - [utils/db.py](utils/db.py)
         - [utils/seed_database.py](utils/seed_database.py)
     - [data/](data) — CSV fixtures and seeds
         - [data/test/](data/test) — deterministic seed CSVs used by `utils/seed_database.py`
     - [tests/](tests) — test documentation and Robot suites
         - [tests/README.md](tests/README.md) — consolidated Robot docs
-        - [tests/robot/](tests/robot) — Robot suites, resources, data, and results
+        - [tests/robot/](tests/robot) — Robot suites, resources, and data
     - [Makefile](Makefile) — convenience targets (venv, install, run, test, seed)
     - [req.txt](req.txt) — pinned Python deps (includes Robot + pabot)
     - [.gitignore](.gitignore) — ignores robot results and local artifacts
     - [README.md](README.md)
-    - [database.db](database.db)
+
+## API Endpoint Reference
+
+### Categories Endpoints
+
+| Method | Endpoint URL | Request Model | Response Model | Notes |
+|---|---|---|---|---|
 | POST | [http://127.0.0.1:8000/categories](http://127.0.0.1:8000/categories) | CategoryCreate | Category | Create category |
 | GET | [http://127.0.0.1:8000/categories](http://127.0.0.1:8000/categories) | None | list of Category | Supports skip and limit |
 | GET | [http://127.0.0.1:8000/categories/{category_id}](http://127.0.0.1:8000/categories/%7Bcategory_id%7D) | None | Category | Get one category |
