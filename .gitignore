@@ -43,3 +43,10 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Robot Framework results and temporary outputs
+tests/robot/results/
+**/output.xml
+**/log.html
+**/report.html
+pabot_results/
