@@ -1,0 +1,5 @@
+ref,customer_ref,status
+order-1,ava.johnson@example.com,Completed
+order-2,noah.martinez@example.com,Pending
+order-3,mia.chen@example.com,Cancelled
+order-4,liam.patel@example.com,Completed
