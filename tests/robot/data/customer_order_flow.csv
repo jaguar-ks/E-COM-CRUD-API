@@ -1,0 +1,4 @@
+${customer_email};${category_name};${category_description};${product_name};${product_description};${product_price};${product_stock};${order_quantity};${order_date};${expected_order_status}
+ava.johnson@example.com;Robot Flow Category;Category used by customer order flow;Robot Flow Product;Dedicated product for order flow;75;4;1;2026-05-23T10:00:00Z;Completed
+noah.martinez@example.com;Robot Flow Category B;Category for a second order-flow test;Robot Flow Product B;Second dedicated product;50;5;2;2026-05-24T11:00:00Z;Completed
+mia.chen@example.com;Robot Flow Category C;Third category used for order-flow;Robot Flow Product C;Third product for validation;120;2;1;2026-05-25T09:30:00Z;Completed

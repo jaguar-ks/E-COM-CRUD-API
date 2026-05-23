@@ -1,0 +1,4 @@
+${category_name};${category_description};${customer_first_name};${customer_last_name};${customer_email};${customer_phone};${product_name};${product_description};${product_price};${product_stock};${order_date};${order_quantity};${overstock_quantity}
+Automation Test Category;Category used for the Robot E2E inventory workflow;Robot;User;inventory.test@example.com;+212600000001;Automation Test Product;Robot test product;75;3;2026-05-23T10:30:00Z;2;99
+Automation Test Category 2;Second category used for inventory validation;Noah;Martinez;noah.martinez@example.com;+1-555-0102;Inventory Product 2;Another inventory test product;60;5;2026-05-24T12:00:00Z;1;10
+Automation Test Category 3;Third category for inventory validation;Liam;Patel;liam.patel@example.com;+1-555-0104;Inventory Product 3;Third product used for validation;45;2;2026-05-25T13:00:00Z;2;5
