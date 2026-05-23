@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Session, select
 
 import models
 from db import engine
+from models import Category, Customer, Order, OrderItem, Product
+from utils.seed_database import seed_database
 from routes import (
     categories_router,
     customers_router,
@@ -14,9 +16,18 @@ from routes import (
 )
 
 
+def database_is_empty(session: Session) -> bool:
+    """Return True when the core tables do not contain any rows yet."""
+    tables = (Category, Customer, Product, Order, OrderItem)
+    return all(session.exec(select(table).limit(1)).first() is None for table in tables)
+
+
 @asynccontextmanager
 async def create_tables(app: FastAPI):
     SQLModel.metadata.create_all(engine)
+    with Session(engine) as session:
+        if database_is_empty(session):
+            seed_database(reset_existing=False)
     yield
 
 
