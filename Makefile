@@ -14,96 +14,104 @@ PIP := $(PYTHON) -m pip
 UVICORN := $(PYTHON) -m uvicorn
 ROBOT := $(PYTHON) -m robot
 
+RESET := \033[0m
+RED := \033[31m
+GREEN := \033[32m
+YELLOW := \033[33m
+BLUE := \033[34m
+MAGENTA := \033[35m
+CYAN := \033[36m
+
 .PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-robot-local test-pabot lint clean clean-results reset-db
 
 help:
-	@echo "🎛️  Available targets:"
-	@echo "  🐍 make venv             - create .venv if missing"
-	@echo "  📦 make install          - install dependencies from req.txt"
-	@echo "  🚀 make run-api          - run FastAPI app on $(HOST):$(PORT)"
-	@echo "  ⚡ make run-api-dev      - run FastAPI app with --reload"
-	@echo "  🌱 make seed             - seed database from CSV fixtures"
-	@echo "  🔎 make check-api        - verify API is running at $(BASE_URL)"
-	@echo "  🤖 make test-robot       - run Robot suites (requires API running first)"
-	@echo "  🛰️  make test-robot-live  - run Robot suites (requires API running first)"
-	@echo "  🧪 make test-robot-dry   - Robot dry-run validation"
-	@echo "  🚦 make test-robot-local - start API, run Robot suites, stop API"
-	@echo "  🧹 make lint             - basic Python syntax checks"
-	@echo "  🗂️  make clean-results    - remove Robot result files"
-	@echo "  🧨 make reset-db         - delete SQLite database file"
-	@echo "  ✨ make clean            - clean caches and test artifacts"
+	@printf "$(CYAN)🎛️  Available targets:$(RESET)\n"
+	@printf "$(BLUE)  🐍 make venv$(RESET)             - create .venv if missing\n"
+	@printf "$(BLUE)  📦 make install$(RESET)          - install dependencies from req.txt\n"
+	@printf "$(BLUE)  🚀 make run-api$(RESET)          - run FastAPI app on $(HOST):$(PORT)\n"
+	@printf "$(BLUE)  ⚡ make run-api-dev$(RESET)      - run FastAPI app with --reload\n"
+	@printf "$(BLUE)  🌱 make seed$(RESET)             - seed database from CSV fixtures\n"
+	@printf "$(BLUE)  🔎 make check-api$(RESET)        - verify API is running at $(BASE_URL)\n"
+	@printf "$(BLUE)  🤖 make test-robot$(RESET)       - run Robot suites (requires API running first)\n"
+	@printf "$(BLUE)  🛰️  make test-robot-live$(RESET)  - run Robot suites (requires API running first)\n"
+	@printf "$(BLUE)  🧪 make test-robot-dry$(RESET)   - Robot dry-run validation\n"
+	@printf "$(BLUE)  🚦 make test-robot-local$(RESET) - start API, run Robot suites, stop API\n"
+	@printf "$(BLUE)  🧹 make lint$(RESET)             - basic Python syntax checks\n"
+	@printf "$(BLUE)  🗂️  make clean-results$(RESET)    - remove Robot result files\n"
+	@printf "$(BLUE)  🧨 make reset-db$(RESET)         - delete SQLite database file\n"
+	@printf "$(BLUE)  ✨ make clean$(RESET)            - clean caches and test artifacts\n"
 
 venv:
-	@echo "🐍 [venv] Ensuring virtual environment exists at $(VENV)"
+	@printf "$(GREEN)🐍 [venv] Ensuring virtual environment exists at $(VENV)$(RESET)\n"
 	@-test -d $(VENV) || @python3 -m venv $(VENV)
 
 install: venv
-	@echo "📦 [install] Installing Python dependencies from req.txt"
+	@printf "$(GREEN)📦 [install] Installing Python dependencies from req.txt$(RESET)\n"
 	@$(PIP) install --upgrade pip
 	@$(PIP) install -r req.txt
 
 run-api:
-	@echo "🚀 [run-api] Starting API at $(BASE_URL)"
+	@printf "$(GREEN)🚀 [run-api] Starting API at $(BASE_URL)$(RESET)\n"
 	@$(UVICORN) main:app --host $(HOST) --port $(PORT)
 
 run-api-dev:
-	@echo "⚡ [run-api-dev] Starting API with auto-reload at $(BASE_URL)"
+	@printf "$(GREEN)⚡ [run-api-dev] Starting API with auto-reload at $(BASE_URL)$(RESET)\n"
 	@$(UVICORN) main:app --host $(HOST) --port $(PORT) --reload
 
 seed:
-	@echo "🌱 [seed] Seeding database from CSV fixtures"
+	@printf "$(GREEN)🌱 [seed] Seeding database from CSV fixtures$(RESET)\n"
 	@$(PYTHON) -m utils.seed_database
 
 test: test-robot
-	@echo "✅ [test] Completed"
+	@printf "$(GREEN)✅ [test] Completed$(RESET)\n"
 
 check-api:
-	@echo "🔎 [check-api] Verifying API availability at $(BASE_URL)"
-	@curl -sf "$(BASE_URL)/" >/dev/null || (echo "❌ API is not running. Start it first: make run-api" && exit 1)
+	@printf "$(CYAN)🔎 [check-api] Verifying API availability at $(BASE_URL)$(RESET)\n"
+	@curl -sf "$(BASE_URL)/" >/dev/null || (printf "$(RED)❌ API is not running. Start it first: make run-api$(RESET)\n" && exit 1)
 
 test-robot: check-api test-robot-live
-	@echo "🤖 [test-robot] Robot tests completed"
+	@printf "$(GREEN)🤖 [test-robot] Robot tests completed$(RESET)\n"
 
 test-robot-live: check-api
-	@echo "🛰️  [test-robot-live] Running Robot tests against $(BASE_URL)"
+	@printf "$(MAGENTA)🛰️  [test-robot-live] Running Robot tests against $(BASE_URL)$(RESET)\n"
 	@$(ROBOT) --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
 
 test-robot-dry:
-	@echo "🧪 [test-robot-dry] Running Robot dry-run validation"
+	@printf "$(MAGENTA)🧪 [test-robot-dry] Running Robot dry-run validation$(RESET)\n"
 	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
 
 test-pabot: check-api
-	@echo "⚡ [test-pabot] Running Robot suites in parallel with pabot (test-level split) against $(BASE_URL)"
+	@printf "$(MAGENTA)⚡ [test-pabot] Running Robot suites in parallel with pabot (test-level split) against $(BASE_URL)$(RESET)\n"
 	@$(PYTHON) -m pabot.pabot --testlevelsplit --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
 
 test-robot-local:
 	@set -euo pipefail; \
-	@echo "🚦 [test-robot-local] Starting API on $(BASE_URL) (logs: /tmp/ecom-api.log)"; \
+	printf "$(MAGENTA)🚦 [test-robot-local] Starting API on $(BASE_URL) (logs: /tmp/ecom-api.log)$(RESET)\n"; \
 	@$(UVICORN) main:app --host $(HOST) --port $(PORT) >/tmp/ecom-api.log 2>&1 & \
 	API_PID=$$!; \
-	@echo "⏳ [test-robot-local] Waiting for API health endpoint"; \
+	printf "$(YELLOW)⏳ [test-robot-local] Waiting for API health endpoint$(RESET)\n"; \
 	trap 'kill $$API_PID >/dev/null 2>&1 || true' EXIT INT TERM; \
 	for i in {1..30}; do \
 		if curl -sf "$(BASE_URL)/" >/dev/null; then break; fi; \
 		sleep 1; \
-		if [ $$i -eq 30 ]; then echo "API did not start in time"; exit 1; fi; \
+		if [ $$i -eq 30 ]; then printf "$(RED)API did not start in time$(RESET)\n"; exit 1; fi; \
 	done; \
-	@echo "🎯 [test-robot-local] API is up, running Robot suites"; \
+	printf "$(GREEN)🎯 [test-robot-local] API is up, running Robot suites$(RESET)\n"; \
 	@$(ROBOT) --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
 
 lint:
-	@echo "🧹 [lint] Running Python syntax checks"
-	@$(PYTHON) -m py_compile main.py db.py models/*.py routes/*.py utils/*.py
+	@printf "$(CYAN)🧹 [lint] Running Python syntax checks$(RESET)\n"
+	@$(PYTHON) -m py_compile main.py models/*.py routes/*.py utils/*.py
 
 clean-results:
-	@echo "🗂️  [clean-results] Removing Robot output files"
+	@printf "$(CYAN)🗂️  [clean-results] Removing Robot output files$(RESET)\n"
 	@rm -rf tests/robot/results/*
 
 reset-db:
-	@echo "🧨 [reset-db] Removing SQLite database file"
+	@printf "$(RED)🧨 [reset-db] Removing SQLite database file$(RESET)\n"
 	@rm -f database.db
 
 clean: clean-results
-	@echo "✨ [clean] Removing Python cache artifacts"
+	@printf "$(CYAN)✨ [clean] Removing Python cache artifacts$(RESET)\n"
 	@find . -type d -name "__pycache__" -prune -exec rm -rf {} +
 	@find . -type f -name "*.pyc" -delete
