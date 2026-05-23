@@ -9,13 +9,10 @@ This document centralizes test tooling, data, workflows, and human-readable scen
 - [Project File Organization](#project-file-organization)
 - [Quick Start (install, run, test)](#quick-start-install-run-test)
 - [Test Suite Overview](#test-suite-overview)
-- [Running Tests (DDT)](#running-tests-ddt)
 - [Troubleshooting](#troubleshooting)
 - [Suite overviews](#suite-overviews)
 - [Keywords reference](#keywords-reference)
 - [Scenarios](#scenarios)
-- [Example mapping: test → keywords](#example-mapping-test-%E2%86%92-keywords)
-- [Contact / Next steps](#contact--next-steps)
 
 ## Documentation URLs
 
@@ -37,17 +34,28 @@ This document centralizes test tooling, data, workflows, and human-readable scen
 
 ## Project File Organization
 
-- `tests/robot/`
-  - `tests/robot/resources/api.resource` — shared Robot keywords and helpers
-  - `tests/robot/data/` — CSV files used by DataDriver (e.g. `customer_order_flow.csv`)
-  - `tests/robot/suites/` — Robot `.robot` suite files using CSV-driven templates
-  - `tests/robot/results/` — Robot output directory (created by runs)
+- `tests/` — top-level test documentation and assets
+  - [tests/README.md](tests/README.md) — consolidated Robot and test documentation
+  - `tests/scenarios/` — human-readable acceptance scenarios
+    - [tests/scenarios/e2e_customer_order_flow.md](tests/scenarios/e2e_customer_order_flow.md) — customer order flow scenario
+    - [tests/scenarios/e2e_inventory_and_validation_flow.md](tests/scenarios/e2e_inventory_and_validation_flow.md) — inventory and validation scenario
+  - `tests/robot/` — Robot Framework project
+    - `tests/robot/resources/` — shared Robot keywords and helpers
+      - [tests/robot/resources/api.resource](tests/robot/resources/api.resource) — shared API session, CRUD, and assertion keywords
+    - `tests/robot/data/` — CSV files consumed by DataDriver
+      - [tests/robot/data/customer_order_flow.csv](tests/robot/data/customer_order_flow.csv) — rows for the customer order DDT suite
+      - [tests/robot/data/inventory_validation_flow.csv](tests/robot/data/inventory_validation_flow.csv) — rows for the inventory validation DDT suite
+    - `tests/robot/suites/` — Robot `.robot` suite files
+      - [tests/robot/suites/e2e_customer_order_flow.robot](tests/robot/suites/e2e_customer_order_flow.robot) — customer order workflow suite
+      - [tests/robot/suites/e2e_inventory_and_validation_flow.robot](tests/robot/suites/e2e_inventory_and_validation_flow.robot) — inventory validation suite
+    - `tests/robot/results/` — generated Robot output (`output.xml`, `log.html`, `report.html`)
 
-Other relevant files in project:
+Other related project files:
 
-- `data/test/` — CSV fixtures consumed by `utils/seed_database.py`
-- `utils/seed_database.py` — deterministic seeder used to make test runs reproducible
-- `Makefile` — convenient targets to create venv, seed DB, run API, and run Robot suites
+- [data/test/](data/test) — deterministic CSV fixtures consumed by `utils/seed_database.py`
+- [utils/seed_database.py](utils/seed_database.py) — database seeder used to make API and test runs reproducible
+- [Makefile](Makefile) — convenience targets for venv, install, seed, API, and Robot execution
+- [req.txt](req.txt) — pinned Python dependencies, including Robot Framework and `pabot`
 
 ## Quick Start (install, run, test)
 
