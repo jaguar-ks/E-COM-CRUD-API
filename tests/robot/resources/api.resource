@@ -11,21 +11,11 @@ ${API_ALIAS}      ecom_api
 
 *** Keywords ***
 Prepare API Session
-    Reset Database To Known State
     Create Session    ${API_ALIAS}    ${BASE_URL}
     API Should Be Healthy
 
 Close API Session
     Delete All Sessions
-
-Reset Database To Known State
-    ${project_root}=    Normalize Path    ${CURDIR}/../../..
-    ${venv_python}=    Normalize Path    ${project_root}/.venv/bin/python
-    ${has_venv_python}=    Run Keyword And Return Status    File Should Exist    ${venv_python}
-    ${python_executable}=    Set Variable If    ${has_venv_python}    ${venv_python}    python
-    ${seed_result}=    Run Process    ${python_executable}    -m    utils.seed_database    cwd=${project_root}    stderr=STDOUT
-    Log    ${seed_result.stdout}
-    Should Be Equal As Integers    ${seed_result.rc}    0
 
 API Should Be Healthy
     ${response}=    GET On Session    ${API_ALIAS}    /
