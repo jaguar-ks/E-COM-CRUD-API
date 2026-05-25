@@ -4,13 +4,13 @@ Library           DataDriver    file=${CURDIR}/../data/customer_order_flow.csv  
 Resource          ../resources/api.resource
 Suite Setup       Prepare API Session
 Suite Teardown    Close API Session
-Test Template     Run Customer Order Workflow
+Test Template     Customer Order Workflow
 
 *** Test Cases ***
 Customer order workflow from CSV
 
 *** Keywords ***
-Run Customer Order Workflow
+Customer Order Workflow
     [Arguments]    ${customer_email}    ${category_name}    ${category_description}    ${product_name}    ${product_description}    ${product_price}    ${product_stock}    ${order_quantity}    ${order_date}    ${expected_order_status}
 
     ${customer}=    Find Item By Field    /customers    email    ${customer_email}
