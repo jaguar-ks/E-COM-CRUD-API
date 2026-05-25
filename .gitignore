@@ -50,3 +50,4 @@ tests/robot/results/
 **/log.html
 **/report.html
 pabot_results/
+.pabotsuitenames
