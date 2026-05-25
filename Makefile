@@ -1,8 +1,6 @@
-SHELL := /bin/bash
-
 VENV ?= .venv
 HOST ?= 127.0.0.1
-PORT ?= 8001
+PORT ?= 8000
 BASE_URL ?= http://$(HOST):$(PORT)
 
 PYTHON ?= python3
