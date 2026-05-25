@@ -2,8 +2,10 @@ annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.13.0
 certifi==2026.2.25
+charset-normalizer==3.4.7
 click==8.3.1
 dnspython==2.8.0
+docutils==0.22.4
 email-validator==2.3.0
 fastapi==0.135.2
 fastapi-cli==0.0.24
@@ -27,9 +29,14 @@ Pygments==2.20.0
 python-dotenv==1.2.2
 python-multipart==0.0.22
 PyYAML==6.0.3
+requests==2.34.2
 rich==14.3.3
 rich-toolkit==0.19.7
 rignore==0.7.6
+robotframework==7.3.2
+robotframework-datadriver==1.11.2
+robotframework-pabot==5.2.2
+robotframework-requests==0.9.7
 sentry-sdk==2.57.0
 shellingham==1.5.4
 SQLAlchemy==2.0.48
@@ -43,7 +50,3 @@ uvicorn==0.42.0
 uvloop==0.22.1
 watchfiles==1.1.1
 websockets==16.0
-robotframework==7.3.2
-robotframework-requests==0.9.7
-robotframework-datadriver==1.11.2
-pabot
