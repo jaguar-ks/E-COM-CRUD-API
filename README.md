@@ -9,6 +9,7 @@ A FastAPI + SQLModel ecommerce CRUD API with modular routes, Swagger docs, pagin
 - [Technologies Used](#technologies-used)
 - [Project File Organization](#project-file-organization)
 - [Testing](#testing)
+- [CI Pipeline](#ci-pipeline)
 - [API & Tooling](#api--tooling)
 - [Database UML Demo](#database-uml-demo)
 - [Model Reference](#model-reference)
@@ -289,6 +290,31 @@ erDiagram
 - `.gitignore` updated to ignore Robot run artifacts (`tests/robot/results/`, `output.xml`, `log.html`, `report.html`).
 
 See [tests/README.md](tests/README.md) for full Robot/DATADRIVER documentation and run examples.
+
+## CI Pipeline
+
+The repository uses [`.gitlab-ci.yml`](.gitlab-ci.yml) to run the same workflow in GitLab CI that you can run locally with the `Makefile`.
+
+Pipeline stages:
+
+- `build` runs `make ci-build`.
+    - Installs dependencies through `ci-setup`.
+    - Runs Python syntax checks with `lint`.
+    - Runs Robot dry-run validation so suite syntax and data files are checked before the API starts.
+- `e2e` runs `make ci-e2e`.
+    - Starts the API in the background with `ci-api-start`.
+    - Waits for the health endpoint with `ci-api-wait`.
+    - Runs the Robot suites against the live API.
+    - Stops the API and prints the tail of the API log with `ci-api-stop`.
+
+CI implementation notes:
+
+- The GitLab job image is `python:3.11-alpine`.
+- The CI job installs build tools with `apk add` so `make` and native Python dependencies work in Alpine.
+- The API readiness check lives in [utils/ci_wait_for_api.py](utils/ci_wait_for_api.py) because the wait loop was more reliable as a Python module than as inline shell in `Makefile`.
+- The helper targets are in [Makefile](Makefile): `ci-setup`, `ci-build`, `ci-api-start`, `ci-api-wait`, `ci-api-stop`, and `ci-e2e`.
+
+Use the GitLab pipeline when you want the same checks run automatically on push, and use `make ci-build` / `make ci-e2e` locally when you want to reproduce the CI behavior from the terminal.
 
 ## API & Tooling
 
