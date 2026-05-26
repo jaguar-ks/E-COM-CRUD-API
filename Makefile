@@ -20,7 +20,7 @@ BLUE := \033[34m
 MAGENTA := \033[35m
 CYAN := \033[36m
 
-.PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-robot-local test-pabot lint clean clean-results reset-db
+.PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-pabot lint clean clean-results reset-db
 
 help:
 	@printf "$(CYAN)🎛️  Available targets:$(RESET)\n"
@@ -81,21 +81,6 @@ test-robot-dry:
 test-pabot: check-api
 	@printf "$(MAGENTA)⚡ [test-pabot] Running Robot suites in parallel with pabot (test-level split) against $(BASE_URL)$(RESET)\n"
 	@$(PYTHON) -m pabot.pabot --testlevelsplit --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
-
-test-robot-local:
-	@set -euo pipefail; \
-	printf "$(MAGENTA)🚦 [test-robot-local] Starting API on $(BASE_URL) (logs: /tmp/ecom-api.log)$(RESET)\n"; \
-	@$(UVICORN) main:app --host $(HOST) --port $(PORT) >/tmp/ecom-api.log 2>&1 & \
-	API_PID=$$!; \
-	printf "$(YELLOW)⏳ [test-robot-local] Waiting for API health endpoint$(RESET)\n"; \
-	trap 'kill $$API_PID >/dev/null 2>&1 || true' EXIT INT TERM; \
-	for i in {1..30}; do \
-		if curl -sf "$(BASE_URL)/" >/dev/null; then break; fi; \
-		sleep 1; \
-		if [ $$i -eq 30 ]; then printf "$(RED)API did not start in time$(RESET)\n"; exit 1; fi; \
-	done; \
-	printf "$(GREEN)🎯 [test-robot-local] API is up, running Robot suites$(RESET)\n"; \
-	@$(ROBOT) --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
 
 lint:
 	@printf "$(CYAN)🧹 [lint] Running Python syntax checks$(RESET)\n"
