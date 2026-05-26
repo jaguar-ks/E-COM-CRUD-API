@@ -1,8 +1,4 @@
-image: "python:3.11"
-
-default:
-  before_script:
-    - python3 --version
+image: python:3.11
 
 stages:
   - build
@@ -18,11 +14,13 @@ cache:
   paths:
     - .cache/pip
 
+before_script:
+  - python3 --version
+
 build_and_syntax:
   stage: build
   script:
-    - |
-      make ci-build
+    - make ci-build
   artifacts:
     when: always
     paths:
@@ -32,11 +30,9 @@ build_and_syntax:
 api_smoke:
   stage: api
   script:
-    - |
-      make ci-api-smoke
+    - make ci-api-smoke
   after_script:
-    - |
-      make ci-api-stop || true
+    - make ci-api-stop || true
   artifacts:
     when: always
     paths:
@@ -47,11 +43,9 @@ api_smoke:
 api_e2e_tests:
   stage: e2e
   script:
-    - |
-      make ci-e2e
+    - make ci-e2e
   after_script:
-    - |
-      make ci-api-stop || true
+    - make ci-api-stop || true
   artifacts:
     when: always
     paths:
