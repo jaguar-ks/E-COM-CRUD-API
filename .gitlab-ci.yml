@@ -1,4 +1,4 @@
-image: python:3.11
+image: python:3.11-alpine
 
 stages:
   - build
@@ -16,6 +16,7 @@ cache:
 
 before_script:
   - python3 --version
+  - apk add --no-cache build-base libffi-dev openssl-dev python3-dev rust cargo make
 
 build_and_syntax:
   stage: build
