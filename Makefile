@@ -23,7 +23,7 @@ BLUE := \033[34m
 MAGENTA := \033[35m
 CYAN := \033[36m
 
-.PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-pabot lint clean clean-results reset-db ci-setup ci-build ci-api-start ci-api-wait ci-api-stop ci-api-smoke ci-e2e test-robot-local
+.PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-pabot lint clean clean-results reset-db ci-setup ci-build ci-api-start ci-api-wait ci-api-stop ci-e2e test-robot-local
 
 help:
 	@printf "$(CYAN)🎛️  Available targets:$(RESET)\n"
@@ -133,9 +133,6 @@ ci-api-stop:
 	@printf "$(CYAN)🧯 [ci-api-stop] Stopping API$(RESET)\n"
 	@-if [ -f $(CI_API_PID) ]; then kill "$$(cat $(CI_API_PID))" || true; fi
 	@-tail -n 200 $(CI_API_LOG) || true
-
-ci-api-smoke: ci-api-start ci-api-wait ci-api-stop
-	@printf "$(GREEN)🧪 [ci-api-smoke] API startup checks completed$(RESET)\n"
 
 ci-e2e: ci-api-start ci-api-wait
 	@printf "$(MAGENTA)🤖 [ci-e2e] Running Robot suites against $(CI_API_URL)$(RESET)\n"
