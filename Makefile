@@ -11,6 +11,9 @@ endif
 PIP := $(PYTHON) -m pip
 UVICORN := $(PYTHON) -m uvicorn
 ROBOT := $(PYTHON) -m robot
+CI_API_LOG ?= api.log
+CI_API_PID ?= api.pid
+CI_API_URL ?= $(BASE_URL)
 
 RESET := \033[0m
 RED := \033[31m
@@ -20,7 +23,7 @@ BLUE := \033[34m
 MAGENTA := \033[35m
 CYAN := \033[36m
 
-.PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-pabot lint clean clean-results reset-db
+.PHONY: help venv install run-api run-api-dev seed check-api test test-robot test-robot-live test-robot-dry test-pabot lint clean clean-results reset-db ci-setup ci-build ci-api-start ci-api-wait ci-api-stop ci-api-smoke ci-e2e test-robot-local
 
 help:
 	@printf "$(CYAN)🎛️  Available targets:$(RESET)\n"
@@ -35,6 +38,11 @@ help:
 	@printf "$(BLUE)  🧪 make test-robot-dry$(RESET)   - Robot dry-run validation\n"
 	@printf "$(BLUE)  🚦 make test-robot-local$(RESET) - start API, run Robot suites, stop API\n"
 	@printf "$(BLUE)  🧹 make lint$(RESET)             - basic Python syntax checks\n"
+	@printf "$(BLUE)  🛠️  make ci-build$(RESET)         - install deps, syntax check, Robot dry-run\n"
+	@printf "$(BLUE)  🚀 make ci-api-start$(RESET)      - start API in the background for CI\n"
+	@printf "$(BLUE)  🔎 make ci-api-wait$(RESET)       - wait for API health in CI\n"
+	@printf "$(BLUE)  🧯 make ci-api-stop$(RESET)       - stop CI API process and dump logs\n"
+	@printf "$(BLUE)  🤖 make ci-e2e$(RESET)            - run API-backed Robot E2E workflow\n"
 	@printf "$(BLUE)  🗂️  make clean-results$(RESET)    - remove Robot result files\n"
 	@printf "$(BLUE)  🧨 make reset-db$(RESET)         - delete SQLite database file\n"
 	@printf "$(BLUE)  ✨ make clean$(RESET)            - clean caches and test artifacts\n"
@@ -45,6 +53,11 @@ venv:
 
 install: venv
 	@printf "$(GREEN)📦 [install] Installing Python dependencies from req.txt$(RESET)\n"
+	@$(PIP) install --upgrade pip
+	@$(PIP) install -r req.txt
+
+ci-setup:
+	@printf "$(GREEN)📦 [ci-setup] Installing Python dependencies from req.txt$(RESET)\n"
 	@$(PIP) install --upgrade pip
 	@$(PIP) install -r req.txt
 
@@ -85,6 +98,52 @@ test-pabot: check-api
 lint:
 	@printf "$(CYAN)🧹 [lint] Running Python syntax checks$(RESET)\n"
 	@$(PYTHON) -m py_compile main.py models/*.py routes/*.py utils/*.py
+
+ci-build: ci-setup lint
+	@printf "$(GREEN)🧱 [ci-build] Running Robot dry-run validation$(RESET)\n"
+	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
+
+ci-api-start: ci-setup
+	@printf "$(GREEN)🚀 [ci-api-start] Starting API at $(CI_API_URL)$(RESET)\n"
+	@$(UVICORN) main:app --host $(HOST) --port $(PORT) > $(CI_API_LOG) 2>&1 & echo $$! > $(CI_API_PID)
+
+ci-api-wait:
+	@printf "$(CYAN)🔎 [ci-api-wait] Waiting for API at $(CI_API_URL)$(RESET)\n"
+	@$(PYTHON) - <<-'PY'
+	import sys
+	import time
+	import requests
+
+	url = "$(CI_API_URL)/"
+	for _ in range(60):
+	    try:
+	        response = requests.get(url, timeout=2)
+	        if response.status_code == 200:
+	            print("API is healthy")
+	            sys.exit(0)
+	    except Exception:
+	        pass
+	    time.sleep(1)
+
+	print("API did not become healthy in time")
+	sys.exit(1)
+	PY
+
+ci-api-stop:
+	@printf "$(CYAN)🧯 [ci-api-stop] Stopping API$(RESET)\n"
+	@-if [ -f $(CI_API_PID) ]; then kill "$$(cat $(CI_API_PID))" || true; fi
+	@-tail -n 200 $(CI_API_LOG) || true
+
+ci-api-smoke: ci-api-start ci-api-wait ci-api-stop
+	@printf "$(GREEN)🧪 [ci-api-smoke] API startup checks completed$(RESET)\n"
+
+ci-e2e: ci-api-start ci-api-wait
+	@printf "$(MAGENTA)🤖 [ci-e2e] Running Robot suites against $(CI_API_URL)$(RESET)\n"
+	@$(ROBOT) --variable BASE_URL:$(CI_API_URL) -d tests/robot/results tests/robot/suites
+	@$(MAKE) ci-api-stop
+
+test-robot-local: ci-e2e
+	@printf "$(GREEN)🚦 [test-robot-local] Completed$(RESET)\n"
 
 clean-results:
 	@printf "$(CYAN)🗂️  [clean-results] Removing Robot output files$(RESET)\n"
