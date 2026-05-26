@@ -109,25 +109,16 @@ ci-api-start: ci-setup
 
 ci-api-wait:
 	@printf "$(CYAN)🔎 [ci-api-wait] Waiting for API at $(CI_API_URL)$(RESET)\n"
-	@$(PYTHON) - <<-'PY'
-	import sys
-	import time
-	import requests
-
-	url = "$(CI_API_URL)/"
-	for _ in range(60):
-	    try:
-	        response = requests.get(url, timeout=2)
-	        if response.status_code == 200:
-	            print("API is healthy")
-	            sys.exit(0)
-	    except Exception:
-	        pass
-	    time.sleep(1)
-
-	print("API did not become healthy in time")
-	sys.exit(1)
-	PY
+	@$(PYTHON) -c 'import sys,time,requests; url="$(CI_API_URL)/";\
+for _ in range(60):\
+    try:\
+        response = requests.get(url, timeout=2);\
+        if response.status_code == 200:\
+            print("API is healthy"); sys.exit(0)\
+    except Exception:\
+        pass\
+    time.sleep(1);\
+print("API did not become healthy in time"); sys.exit(1)'
 
 ci-api-stop:
 	@printf "$(CYAN)🧯 [ci-api-stop] Stopping API$(RESET)\n"
