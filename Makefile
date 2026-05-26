@@ -85,11 +85,11 @@ test-robot: check-api test-robot-live
 
 test-robot-live: check-api
 	@printf "$(MAGENTA)🛰️  [test-robot-live] Running Robot tests against $(BASE_URL)$(RESET)\n"
-	@$(ROBOT) --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
+	@$(ROBOT) --variable BASE_URL:$(BASE_URL) --xunit tests/robot/results/xunit.xml -d tests/robot/results tests/robot/suites
 
 test-robot-dry:
 	@printf "$(MAGENTA)🧪 [test-robot-dry] Running Robot dry-run validation$(RESET)\n"
-	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
+	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) --xunit tests/robot/results/xunit.xml -d tests/robot/results tests/robot/suites
 
 test-pabot: check-api
 	@printf "$(MAGENTA)⚡ [test-pabot] Running Robot suites in parallel with pabot (test-level split) against $(BASE_URL)$(RESET)\n"
@@ -101,7 +101,7 @@ lint:
 
 ci-build: ci-setup lint
 	@printf "$(GREEN)🧱 [ci-build] Running Robot dry-run validation$(RESET)\n"
-	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
+	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) --xunit tests/robot/results/xunit.xml -d tests/robot/results tests/robot/suites
 
 ci-api-start: ci-setup
 	@printf "$(GREEN)🚀 [ci-api-start] Starting API at $(CI_API_URL)$(RESET)\n"
@@ -118,7 +118,7 @@ ci-api-stop:
 
 ci-e2e: ci-api-start ci-api-wait
 	@printf "$(MAGENTA)🤖 [ci-e2e] Running Robot suites against $(CI_API_URL)$(RESET)\n"
-	@$(ROBOT) --variable BASE_URL:$(CI_API_URL) -d tests/robot/results tests/robot/suites
+	@$(ROBOT) --variable BASE_URL:$(CI_API_URL) --xunit tests/robot/results/xunit.xml -d tests/robot/results tests/robot/suites
 	@$(MAKE) ci-api-stop
 
 test-robot-local: ci-e2e

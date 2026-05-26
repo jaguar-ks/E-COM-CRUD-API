@@ -26,6 +26,8 @@ build_and_syntax:
     paths:
       - tests/robot/results/
     expire_in: 1 week
+    reports:
+      junit: tests/robot/results/xunit.xml
 
 api_e2e_tests:
   stage: e2e
@@ -40,3 +42,5 @@ api_e2e_tests:
       - api.log
       - api.pid
     expire_in: 1 week
+    reports:
+      junit: tests/robot/results/xunit.xml
