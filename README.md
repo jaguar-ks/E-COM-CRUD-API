@@ -142,7 +142,7 @@ make clean
         - [routes/customers.py](routes/customers.py)
         - [routes/orders.py](routes/orders.py)
         - [routes/order_items.py](routes/order_items.py)
-    - [utils/](utils) — helper scripts (seeder, misc)
+    - [utils/](utils) — helper scripts
         - [utils/db.py](utils/db.py)
         - [utils/seed_database.py](utils/seed_database.py)
     - [data/](data) — CSV fixtures and seeds
@@ -151,9 +151,78 @@ make clean
         - [tests/README.md](tests/README.md) — consolidated Robot docs
         - [tests/robot/](tests/robot) — Robot suites, resources, and data
     - [Makefile](Makefile) — convenience targets (venv, install, run, test, seed)
-    - [req.txt](req.txt) — pinned Python deps (includes Robot + pabot)
-    - [.gitignore](.gitignore) — ignores robot results and local artifacts
+    - [req.txt](req.txt)
+    - [.gitignore](.gitignore)
     - [README.md](README.md)
+
+## Database UML Demo
+
+Graphical ER/UML demo (Mermaid):
+
+```mermaid
+erDiagram
+    CATEGORY {
+        int id PK
+        string name "UNIQUE"
+        string description
+    }
+
+    PRODUCT {
+        int id PK
+        string name
+        string description
+        int price
+        int stock_quantity
+        int category_id FK
+        datetime created_at
+    }
+
+    CUSTOMER {
+        int id PK
+        string first_name
+        string last_name
+        string email "UNIQUE"
+        string phone
+        datetime created_at
+    }
+
+    ORDER {
+        int id PK
+        int customer_id FK
+        datetime order_date
+        int total_amount
+        string status
+    }
+
+    ORDER_ITEM {
+        int id PK
+        int order_id FK
+        int product_id FK
+        int quantity
+        int price
+    }
+
+    CATEGORY ||--o{ PRODUCT : contains
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--o{ ORDER_ITEM : has
+    PRODUCT ||--o{ ORDER_ITEM : appears_in
+```
+
+## Model Reference
+
+| Model | File | Kind | Main Fields | Relationships | Used By Endpoints |
+|---|---|---|---|---|---|
+| ProductCreate | [models/product.py](models/product.py) | Request schema | name, description, price, stock_quantity, category_id | category_id -> Category | POST/PUT products |
+| Product | [models/product.py](models/product.py) | Response + table | id, created_at + ProductCreate fields | belongs to Category, has many OrderItem | All products endpoints |
+| CategoryCreate | [models/category.py](models/category.py) | Request schema | name, description | None | POST/PUT categories |
+| Category | [models/category.py](models/category.py) | Response + table | id + CategoryCreate fields | has many Product | All categories endpoints |
+| CustomerCreate | [models/customer.py](models/customer.py) | Request schema | first_name, last_name, email, phone | None | POST/PUT customers |
+| Customer | [models/customer.py](models/customer.py) | Response + table | id, created_at + CustomerCreate fields | has many Order | All customers endpoints |
+| OrderCreate | [models/order.py](models/order.py) | Request schema | customer_id, order_date, total_amount, status | customer_id -> Customer | POST/PUT orders |
+| Order | [models/order.py](models/order.py) | Response + table | id + OrderCreate fields | belongs to Customer, has many OrderItem | All orders endpoints |
+| OrderItemCreate | [models/order_item.py](models/order_item.py) | Request schema | order_id, product_id, quantity, price | order_id -> Order, product_id -> Product | POST/PUT order-items |
+| OrderItem | [models/order_item.py](models/order_item.py) | Response + table | id + OrderItemCreate fields | belongs to Order and Product | All order-items endpoints |
+| OrderStatus | [models/order.py](models/order.py) | Enum | Pending, Completed, Cancelled | Used by Order.status | Orders endpoints |
 
 ## API Endpoint Reference
 
