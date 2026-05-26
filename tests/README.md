@@ -48,7 +48,6 @@ This document centralizes test tooling, data, workflows, and human-readable scen
     - `tests/robot/suites/` — Robot `.robot` suite files
       - [tests/robot/suites/e2e_customer_order_flow.robot](tests/robot/suites/e2e_customer_order_flow.robot) — customer order workflow suite
       - [tests/robot/suites/e2e_inventory_and_validation_flow.robot](tests/robot/suites/e2e_inventory_and_validation_flow.robot) — inventory validation suite
-    - `tests/robot/results/` — generated Robot output (`output.xml`, `log.html`, `report.html`)
 
 Other related project files:
 
