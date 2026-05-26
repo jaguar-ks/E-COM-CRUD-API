@@ -101,7 +101,7 @@ lint:
 
 ci-build: ci-setup lint
 	@printf "$(GREEN)🧱 [ci-build] Running Robot dry-run validation$(RESET)\n"
-	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) --xunit tests/robot/results/xunit.xml -d tests/robot/results tests/robot/suites
+	@$(ROBOT) --dryrun --variable BASE_URL:$(BASE_URL) -d tests/robot/results tests/robot/suites
 
 ci-api-start: ci-setup
 	@printf "$(GREEN)🚀 [ci-api-start] Starting API at $(CI_API_URL)$(RESET)\n"
